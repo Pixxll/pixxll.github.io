@@ -5,6 +5,8 @@ const ctx = canvas.getContext('2d');
 const width = canvas.width;
 const height = canvas.height;
 
+let score = 0;
+
 
 let game = [
     [0, 0, 0, 0],
@@ -131,7 +133,7 @@ function draw() {
 }
 
 draw();
-console.log(game);
+document.getElementById('score').innerHTML = score;
 
 //Listener
 document.addEventListener("keydown", (e) => {
@@ -162,6 +164,13 @@ document.addEventListener("keydown", (e) => {
                     if (newGame[i][j] === newGame[i][j - 1]) {
 
                         newGame[i][j - 1] = newGame[i][j] * 2;
+
+                        if (!isNaN(newGame[i][j - 1])) {
+                            score += newGame[i][j - 1];
+                            console.log(typeof(score));
+                            console.log(score);
+                        }
+
                         newGame[i].splice(j, 1);
 
                     }
@@ -219,6 +228,13 @@ document.addEventListener("keydown", (e) => {
                     if (newGame[i][j] === newGame[i][j + 1]) {
 
                         newGame[i][j + 1] = newGame[i][j] * 2;
+                        
+                        if (!isNaN(newGame[i][j + 1])) {
+                            score += newGame[i][j + 1];
+                            console.log(typeof(score));
+                            console.log(score);
+                        }
+
                         newGame[i].splice(j, 1);
 
                     }
@@ -262,6 +278,13 @@ document.addEventListener("keydown", (e) => {
                     if (game[i][j] === game[i][j + 1]) {
 
                         game[i][j + 1] = game[i][j] * 2;
+
+                        if (!isNaN(game[i][j + 1])) {
+                            score += game[i][j + 1];
+                            console.log(typeof(score));
+                            console.log(score);
+                        }
+
                         game[i].splice(j, 1);
 
                     }
@@ -291,6 +314,13 @@ document.addEventListener("keydown", (e) => {
                     if (game[i][j] === game[i][j - 1]) {
 
                         game[i][j - 1] = game[i][j] * 2;
+
+                        if (!isNaN(game[i][j - 1])) {
+                            score += game[i][j - 1];
+                            console.log(typeof(score));
+                            console.log(score);
+                        }
+
                         game[i].splice(j, 1);
 
                     }
@@ -321,9 +351,5 @@ document.addEventListener("keydown", (e) => {
     
 
     draw();
-    console.log(game);
+    document.getElementById('score').innerHTML = score;
 });
-
-
-
-
