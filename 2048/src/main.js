@@ -1,3 +1,4 @@
+//Variables
 const canvas = document.getElementById('gameScreen');
 const ctx = canvas.getContext('2d');
 
@@ -6,12 +7,13 @@ const height = canvas.height;
 
 
 let game = [
-    [0, 0, 32, 0],
-    [8, 0, 0, 0],
-    [4, 0, 0, 0],
-    [0, 0, 2, 0]
-]
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [2, 0, 2, 0]
+];
 
+//Functions
 function drawLine(x, y, x2, y2, color='black') {
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -21,6 +23,26 @@ function drawLine(x, y, x2, y2, color='black') {
     ctx.closePath();
 }
 
+function isFull(arr) {
+    let count = 0;
+    for (let i = 0; i < arr.length; i++) {
+
+        if (arr[i].indexOf(0) === -1) {
+
+            count += 1;
+
+        }
+
+    }
+
+    if (count === arr.length) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//Classes
 class Grid {
     constructor(sx, sy, cx, cy) {
         this._sx = sx;
@@ -49,28 +71,6 @@ class Block {
         this._value = value;
     }
 
-    get x() {
-        return this._x;
-    }
-
-    set x(x) {
-        ctx.clearRect(this._x - this._sx / 2, this._y - this._sy / 2, this._sx, this._sy);
-        this._x = x;
-        ctx.fillStyle = this._color;
-        ctx.fillRect(this._x - this._sx / 2, this._y - this._sy / 2, this._sx, this._sy);
-    }
-
-    get y() {
-        return this._y;
-    }
-
-    set y(y) {
-        ctx.clearRect(this._x - this._sx / 2, this._y - this._sy / 2, this._sx, this._sy);
-        this._y = y;
-        ctx.fillStyle = this._color;
-        ctx.fillRect(this._x - this._sx / 2, this._y - this._sy / 2, this._sx, this._sy);
-    }
-
     draw() {
 
         switch (this._value) {
@@ -97,8 +97,6 @@ class Block {
                 break;
         }
 
-
-        
         ctx.fillRect(this._x - this._sx / 2, this._y - this._sy / 2 , this._sx, this._sy);
 
         ctx.font = "40px Arial";
@@ -111,7 +109,7 @@ class Block {
 const grid = new Grid(4, 4, width / 2, height / 2);
 
 
-
+//Code
 function draw() {
     ctx.clearRect(0, 0, width, height);
     grid.draw();
@@ -127,31 +125,44 @@ function draw() {
             }
            
         }
-        
     
     }
+
 }
 
 draw();
 console.log(game);
 
+//Listener
 document.addEventListener("keydown", (e) => {
     if (e.code === "ArrowUp") {
 
-        for (let i = 0; i < game.length; i++) {
+        let newGame = [];
 
-            for (let j = 0; j < game[i].length; j++) {
+        for (let i = 0; i < 4; i++) {
 
-                if (game[j][i] != 0) {
+            newGame.push([]);
 
-                    for (let k = 0; k < game[i].length; k++) {
+            for (let j = 0; j < 4; j++) {
 
-                        if (game[k][i] === 0) {
+                newGame[i].push(game[j][i]);
 
-                            game[k][i] = game[j][i];
-                            game[j][i] = 0;
+            }
 
-                        }
+        }
+
+        for (let i = 0; i < newGame.length; i++) {
+
+            newGame[i] = newGame[i].filter(item => item !== 0);
+            
+            if (newGame[i].length >= 2) {
+                
+                for (let j = 0; j < 4; j ++) {
+
+                    if (newGame[i][j] === newGame[i][j - 1]) {
+
+                        newGame[i][j - 1] = newGame[i][j] * 2;
+                        newGame[i].splice(j, 1);
 
                     }
 
@@ -159,28 +170,80 @@ document.addEventListener("keydown", (e) => {
 
             }
 
+            newGame[i] = newGame[i].filter(item => isNaN(item) === false);
+
+            while (newGame[i].length !== 4) {
+                newGame[i].push(0);
+            }
+
+        }
+
+        game = [];
+
+        for (let i = 0; i < 4; i++) {
+
+            game.push([]);
+
+            for (let j = 0; j < 4; j++) {
+
+                game[i].push(newGame[j][i]);
+
+            }
+
         }
 
     } else if (e.code === "ArrowDown") {
 
-        for (let i = 0; i < game.length; i++) {
+        let newGame = [];
 
-            for (let j = game[i].length - 1; j >= 0; j--) {
+        for (let i = 0; i < 4; i++) {
 
-                if (game[j][i] != 0) {
+            newGame.push([]);
 
-                    for (let k = game[i].length - 1; k >= 0; k--) {
+            for (let j = 0; j < 4; j++) {
 
-                        if (game[k][i] === 0) {
+                newGame[i].push(game[j][i]);
 
-                            game[k][i] = game[j][i];
-                            game[j][i] = 0;
+            }
 
-                        }
+        }
+
+        for (let i = 0; i < newGame.length; i++) {
+            
+            newGame[i] = newGame[i].filter(item => item !== 0);
+
+            if (newGame[i].length >= 2) {
+                
+                for (let j = 3; j >= 0; j --) {
+
+                    if (newGame[i][j] === newGame[i][j + 1]) {
+
+                        newGame[i][j + 1] = newGame[i][j] * 2;
+                        newGame[i].splice(j, 1);
 
                     }
 
                 }
+
+            }
+
+            newGame[i] = newGame[i].filter(item => isNaN(item) === false);
+
+            while (newGame[i].length !== 4) {
+                newGame[i].unshift(0);
+            }
+            
+        }
+
+        game = [];
+
+        for (let i = 0; i < 4; i++) {
+
+            game.push([]);
+
+            for (let j = 0; j < 4; j++) {
+
+                game[i].push(newGame[j][i]);
 
             }
 
@@ -189,19 +252,17 @@ document.addEventListener("keydown", (e) => {
     } else if (e.code === "ArrowRight") {
 
         for (let i = 0; i < game.length; i++) {
+            
+            game[i] = game[i].filter(item => item !== 0);
 
-            for (let j = game[i].length - 1; j >= 0; j--) {
+            if (game[i].length >= 2) {
                 
-                if (game[i][j] != 0) {
-                    
-                    for (let k = game[i].length - 1; k >= 0; k--) {
+                for (let j = 3; j >= 0; j --) {
 
-                        if (game[i][k] === 0) {
+                    if (game[i][j] === game[i][j + 1]) {
 
-                            game[i][k] = game[i][j];
-                            game[i][j] = 0;
-
-                        }
+                        game[i][j + 1] = game[i][j] * 2;
+                        game[i].splice(j, 1);
 
                     }
 
@@ -209,24 +270,28 @@ document.addEventListener("keydown", (e) => {
 
             }
 
+            game[i] = game[i].filter(item => isNaN(item) === false);
+
+            while (game[i].length !== 4) {
+                game[i].unshift(0);
+            }
+            
         }
 
     } else if (e.code === "ArrowLeft") {
 
         for (let i = 0; i < game.length; i++) {
 
-            for (let j = 0; j < game[i].length; j++) {
+            game[i] = game[i].filter(item => item !== 0);
+            
+            if (game[i].length >= 2) {
                 
-                if (game[i][j] != 0) {
-                    
-                    for (let k = 0; k < game[i].length; k++) {
+                for (let j = 0; j < 4; j ++) {
 
-                        if (game[i][k] === 0) {
+                    if (game[i][j] === game[i][j - 1]) {
 
-                            game[i][k] = game[i][j];
-                            game[i][j] = 0;
-
-                        }
+                        game[i][j - 1] = game[i][j] * 2;
+                        game[i].splice(j, 1);
 
                     }
 
@@ -234,9 +299,27 @@ document.addEventListener("keydown", (e) => {
 
             }
 
+            game[i] = game[i].filter(item => isNaN(item) === false);
+
+            while (game[i].length !== 4) {
+                game[i].push(0);
+            }
+
         }
 
     }
+    
+    while (!isFull(game)) {
+        let newBlock = [Math.floor(Math.random() * 4), Math.floor(Math.random() * 4)];
+        if (game[newBlock[0]][newBlock[1]] === 0) {
+            
+            game[newBlock[0]][newBlock[1]] = 2;
+            break;
+
+        }
+    }
+    
+
     draw();
     console.log(game);
 });
