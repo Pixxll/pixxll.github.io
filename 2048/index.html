@@ -5,24 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pixxll | 2048</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/game.css">
 </head>
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-    }
 
-    canvas {
-        border: 3px solid black;
-    }
-
-    main {
-        width: 600px;
-        margin: 0 auto;
-        text-align: center;
-    }
-</style>
 <body>
     <header>
         <nav>
@@ -31,6 +16,11 @@
         </nav>
     </header>
     <main>
+        <div class="endscreen" id="endscreen">
+            <span>END</span>
+            <br>
+            <button onclick="reset()" id="btnAgain">Play Again</button>
+        </div>
         <h1>2048</h1>
         <br>
         <hr>
